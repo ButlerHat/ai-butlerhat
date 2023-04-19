@@ -1,0 +1,11 @@
+{
+    "python.analysis.typeCheckingMode": "basic",
+    // Disable  in pylint
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportPrivateImportUsage": "none"
+    },
+    "python.analysis.extraPaths": [
+        "/workspaces/BUIBert/robotframework/buibert",
+        "./data-butlerhat/RobotLibraries"
+    ]
+}

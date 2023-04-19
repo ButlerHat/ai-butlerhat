@@ -1,0 +1,138 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+
+
+    "configurations": [
+        {
+            "name": "Train DocVQA",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspaces/ia-butlerhat/benchmarker/cli/l5/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "CUDA_VISIBLE_DEVICES": "0,1"
+            },
+            "args": [
+                "--gpus", "1",
+                "--model_name_or_path", "/workspaces/ia-butlerhat/model",
+                "--relative_bias_args", "[{\"type\":\"1d\"},{\"type\":\"horizontal\"},{\"type\":\"vertical\"}]",
+                "--model_type", "AlfredUnimodel",
+                "--data_dir", "/workspaces/ia-butlerhat/due-benchmark/raw_data/",
+                "--train_data_dir", "memmaps/DocVQA/microsoft_cv/train",
+                "--val_data_dir", "memmaps/DocVQA/microsoft_cv/dev",
+                "--test_data_dir", "memmaps/DocVQA/microsoft_cv/test",
+                "--im_dir", "/workspaces/ia-butlerhat/due-benchmark/raw_data/pdf/DocVQA",
+                "--max_source_length", "1024",
+                "--img_conf", "{\"size\": 224}",
+                "--max_target_length", "256",
+                "--eval_max_gen_length", "256",
+                "--dropout_rate", "0.15",
+                "--label_smoothing", "0",
+                "--num_workers", "12",
+                "--train_batch_size", "1",
+                "--eval_batch_size", "1",
+                "--accumulate_grad_batches", "8",
+                "--max_epochs", "30",
+                "--val_check_interval", "0.2",
+                "--output_dir", "./results/debug_docvqa_224-unimodel",
+                "--warmup_steps", "100",
+                "--learning_rate", "5e-5",
+                "--lr_scheduler", "constant",
+                "--val_metric", "loss",
+                "--do_train",
+                "--do_predict",
+                "--additional_data_fields", "doc_id", "label_name",
+                "--segment_levels", "tokens", "pages",
+                "--optimizer", "adamw",
+                "--weight_decay", "1e-5",
+                "--adam_epsilon", "1e-8",
+                "--trim_batches",
+                "--accelerator", "ddp",
+                "--seed", "4",
+                "--early_stopping_patience", "20",
+                "--overwrite_output_dir"
+            ]
+        },
+
+        {
+            "name": "Train RVL-CDIP",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspaces/ia-butlerhat/run_rvlcdip.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "CUDA_VISIBLE_DEVICES": "0"
+            },
+            "args": [
+                "--dataset_name", "/workspaces/ia-butlerhat/data/hf_rvl_cdip",
+                "--data_dir", "./rvl-cdip",
+                "--max_seq_length", "1024",
+                "--image_size", "224",
+                "--max_seq_length_decoder", "16",
+                "--max_steps", "10",
+                "--label_names", "labels",
+                "--do_train",
+                "--do_eval",
+                "--do_predict",
+                "--model_name_or_path", "/workspaces/ia-butlerhat/model/hf",
+                "--model_type", "AlfredUnimodel",
+                "--output_dir", "./finetune_rvlcdip",
+                "--gradient_accumulation_steps", "8",
+                "--dataloader_num_workers", "1",
+                "--overwrite_output_dir", "true",
+                "--per_device_train_batch_size", "1",
+                "--per_device_eval_batch_size", "1",
+                "--save_steps", "5000",
+                "--learning_rate", "5e-5",
+                "--warmup_ratio", "0.001",
+                "--weight_decay", "0.001"
+            ]
+        },
+
+        {
+            "name": "Train RobotFramework",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspaces/ia-butlerhat/run_robotframework.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "CUDA_VISIBLE_DEVICES": "0"
+            },
+            "args": ["/workspaces/ia-butlerhat/run_robotframework_train.json"]
+        },
+
+        {
+            "name": "Debug RobotFramework",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspaces/ia-butlerhat/run_robotframework.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "args": ["/workspaces/ia-butlerhat/scripts/run_robotframework_debug.json"]
+        },
+        {
+            "name": "Debug Api server",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspaces/ia-butlerhat/api/app.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "/workspaces/ia-butlerhat"
+            }
+        }
+    ]
+}

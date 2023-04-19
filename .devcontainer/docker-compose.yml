@@ -1,0 +1,72 @@
+version: '3'
+services:
+  alfred:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    user: vscode
+    network_mode: service:nginx_alfred
+    container_name: alfred
+    volumes:
+      - ../..:/workspaces/ia-butlerhat:cached
+    cap_add:
+      - SYS_ADMIN
+    shm_size: '100gb'
+    ipc: host
+    environment:
+      - WANDB_API_KEY=${WANDB_API_KEY:-0}
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            device_ids: ['0','1']
+            capabilities: [gpu]
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+  nginx_alfred:
+    image: nginx:latest
+    container_name: nginx_alfred
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - net_robot
+      - default
+    depends_on:
+      ocr:
+        condition: service_healthy
+
+  ocr:
+    image: davidcorreas/paddle_ocr_gpu
+    command: ["--host", "0.0.0.0"]
+    hostname: "ocr.{{.Task.Slot}}"
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 10G
+        reservations:
+          devices:
+          - driver: nvidia
+            device_ids: ['1']
+            capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+volumes:
+  postgres-data:
+  minio-data:
+
+networks:
+  net_robot:
+    external: true
+  default:
+    name: alfred
