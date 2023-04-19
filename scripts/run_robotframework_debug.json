@@ -1,5 +1,5 @@
 {
-    "dataset_name": "/workspaces/ia-butlerhat/data/robotframework_gym",
+    "dataset_name": "/workspaces/ai-butlerhat/data/robotframework_gym",
     "data_dir": "./rvl-cdip",
     "max_seq_length": 1024,
     "image_size": 224,

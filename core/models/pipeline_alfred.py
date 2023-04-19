@@ -294,7 +294,7 @@ class AlfredPipeline(Pipeline):
 
 if __name__ == "__main__":
     import sys
-    sys.path.append("/workspaces/ia-butlerhat")
+    sys.path.append("/workspaces/ai-butlerhat")
 
     import os
     import base64
@@ -308,13 +308,13 @@ if __name__ == "__main__":
     from qact.data_structure import AlfredExample, PromptStep
 
     # Load model
-    model = AlfredUnimodelForConditionalGeneration.from_pretrained("/workspaces/ia-butlerhat/finetune_robotframework")
-    tokenizer = AlfredTokenizer.from_pretrained("/workspaces/ia-butlerhat/finetune_robotframework")
+    model = AlfredUnimodelForConditionalGeneration.from_pretrained("/workspaces/ai-butlerhat/finetune_robotframework")
+    tokenizer = AlfredTokenizer.from_pretrained("/workspaces/ai-butlerhat/finetune_robotframework")
     alfred = AlfredPipeline(model=model, tokenizer=tokenizer, device="cuda:0")
     # Load example of datset
     file_dir = os.path.dirname(os.path.abspath(__file__))
     cache_dir = os.sep.join(file_dir.split(os.sep)[:-2]) + os.sep + '.hf_cache'
-    dataset = load_dataset("json", data_dir="/workspaces/ia-butlerhat/data-butlerhat/Web/frontend/data/to_alfred", cache_dir=cache_dir)
+    dataset = load_dataset("json", data_dir="/workspaces/ai-butlerhat/data-butlerhat/Web/frontend/data/to_alfred", cache_dir=cache_dir)
     assert isinstance(dataset, DatasetDict), "Please provide a dataset dict"
     example_dict: dict = dataset["train"][0]
     example: AlfredExample = AlfredExample.from_dict(example_dict)

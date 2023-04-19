@@ -28,7 +28,7 @@ RUN conda install -y python=3.8 \
 RUN conda install ipykernel --update-deps --force-reinstall
 RUN rm -rf /tmp/pip-tmp
 
-ENV HF_HOME="/workspaces/ia-butlerhat/.hf_cache"
-ENV HF_DATASETS_CACHE="/workspaces/ia-butlerhat/.hf_cache"
+ENV HF_HOME="/workspaces/ai-butlerhat/.hf_cache"
+ENV HF_DATASETS_CACHE="/workspaces/ai-butlerhat/.hf_cache"
 
 USER $USER_ID

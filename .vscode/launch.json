@@ -10,23 +10,23 @@
             "name": "Train DocVQA",
             "type": "python",
             "request": "launch",
-            "program": "/workspaces/ia-butlerhat/benchmarker/cli/l5/train.py",
+            "program": "/workspaces/ai-butlerhat/benchmarker/cli/l5/train.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "PYTHONPATH": "/workspaces/ai-butlerhat",
                 "CUDA_VISIBLE_DEVICES": "0,1"
             },
             "args": [
                 "--gpus", "1",
-                "--model_name_or_path", "/workspaces/ia-butlerhat/model",
+                "--model_name_or_path", "/workspaces/ai-butlerhat/model",
                 "--relative_bias_args", "[{\"type\":\"1d\"},{\"type\":\"horizontal\"},{\"type\":\"vertical\"}]",
                 "--model_type", "AlfredUnimodel",
-                "--data_dir", "/workspaces/ia-butlerhat/due-benchmark/raw_data/",
+                "--data_dir", "/workspaces/ai-butlerhat/due-benchmark/raw_data/",
                 "--train_data_dir", "memmaps/DocVQA/microsoft_cv/train",
                 "--val_data_dir", "memmaps/DocVQA/microsoft_cv/dev",
                 "--test_data_dir", "memmaps/DocVQA/microsoft_cv/test",
-                "--im_dir", "/workspaces/ia-butlerhat/due-benchmark/raw_data/pdf/DocVQA",
+                "--im_dir", "/workspaces/ai-butlerhat/due-benchmark/raw_data/pdf/DocVQA",
                 "--max_source_length", "1024",
                 "--img_conf", "{\"size\": 224}",
                 "--max_target_length", "256",
@@ -63,15 +63,15 @@
             "name": "Train RVL-CDIP",
             "type": "python",
             "request": "launch",
-            "program": "/workspaces/ia-butlerhat/run_rvlcdip.py",
+            "program": "/workspaces/ai-butlerhat/run_rvlcdip.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
-                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "PYTHONPATH": "/workspaces/ai-butlerhat",
                 "CUDA_VISIBLE_DEVICES": "0"
             },
             "args": [
-                "--dataset_name", "/workspaces/ia-butlerhat/data/hf_rvl_cdip",
+                "--dataset_name", "/workspaces/ai-butlerhat/data/hf_rvl_cdip",
                 "--data_dir", "./rvl-cdip",
                 "--max_seq_length", "1024",
                 "--image_size", "224",
@@ -81,7 +81,7 @@
                 "--do_train",
                 "--do_eval",
                 "--do_predict",
-                "--model_name_or_path", "/workspaces/ia-butlerhat/model/hf",
+                "--model_name_or_path", "/workspaces/ai-butlerhat/model/hf",
                 "--model_type", "AlfredUnimodel",
                 "--output_dir", "./finetune_rvlcdip",
                 "--gradient_accumulation_steps", "8",
@@ -100,38 +100,38 @@
             "name": "Train RobotFramework",
             "type": "python",
             "request": "launch",
-            "program": "/workspaces/ia-butlerhat/run_robotframework.py",
+            "program": "/workspaces/ai-butlerhat/run_robotframework.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
-                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "PYTHONPATH": "/workspaces/ai-butlerhat",
                 "CUDA_VISIBLE_DEVICES": "0"
             },
-            "args": ["/workspaces/ia-butlerhat/run_robotframework_train.json"]
+            "args": ["/workspaces/ai-butlerhat/run_robotframework_train.json"]
         },
 
         {
             "name": "Debug RobotFramework",
             "type": "python",
             "request": "launch",
-            "program": "/workspaces/ia-butlerhat/run_robotframework.py",
+            "program": "/workspaces/ai-butlerhat/run_robotframework.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
-                "PYTHONPATH": "/workspaces/ia-butlerhat",
+                "PYTHONPATH": "/workspaces/ai-butlerhat",
                 "CUDA_VISIBLE_DEVICES": "1"
             },
-            "args": ["/workspaces/ia-butlerhat/scripts/run_robotframework_debug.json"]
+            "args": ["/workspaces/ai-butlerhat/scripts/run_robotframework_debug.json"]
         },
         {
             "name": "Debug Api server",
             "type": "python",
             "request": "launch",
-            "program": "/workspaces/ia-butlerhat/api/app.py",
+            "program": "/workspaces/ai-butlerhat/api/app.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
-                "PYTHONPATH": "/workspaces/ia-butlerhat"
+                "PYTHONPATH": "/workspaces/ai-butlerhat"
             }
         }
     ]

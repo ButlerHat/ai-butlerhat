@@ -1,5 +1,5 @@
 {
-    "dataset_name": "/workspaces/ia-butlerhat/data/robotframework",
+    "dataset_name": "/workspaces/ai-butlerhat/data/robotframework",
     "max_seq_length": 1024,
     "image_size": 224,
     "max_seq_length_decoder": 100,
@@ -7,7 +7,7 @@
     "do_train": true,
     "do_eval": true,
     "do_predict": false,
-    "model_name_or_path": "/workspaces/ia-butlerhat/model/hf",
+    "model_name_or_path": "/workspaces/ai-butlerhat/model/hf",
     "model_type": "AlfredUnimodel",
     "output_dir": "./finetune_robotframework",
     "gradient_accumulation_steps": 8,

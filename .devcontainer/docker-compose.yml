@@ -11,7 +11,7 @@ services:
     network_mode: service:nginx_alfred
     container_name: alfred
     volumes:
-      - ../..:/workspaces/ia-butlerhat:cached
+      - ..:/workspaces/ai-butlerhat:cached
     cap_add:
       - SYS_ADMIN
     shm_size: '100gb'
@@ -60,10 +60,6 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
-
-volumes:
-  postgres-data:
-  minio-data:
 
 networks:
   net_robot:

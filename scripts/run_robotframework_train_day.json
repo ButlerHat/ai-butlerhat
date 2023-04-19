@@ -1,5 +1,5 @@
 {
-    "dataset_name": "/workspaces/ia-butlerhat/data/robotframework_day",
+    "dataset_name": "/workspaces/ai-butlerhat/data/robotframework_day",
     "max_seq_length": 1024,
     "image_size": 224,
     "max_seq_length_decoder": 100,
@@ -7,7 +7,7 @@
     "do_train": true,
     "do_eval": true,
     "do_predict": false,
-    "model_name_or_path": "/workspaces/ia-butlerhat/finetune_robotframework/checkpoint-1500",
+    "model_name_or_path": "/workspaces/ai-butlerhat/finetune_robotframework/checkpoint-1500",
     "model_type": "AlfredUnimodel",
     "output_dir": "./finetune_robotframework_day",
     "gradient_accumulation_steps": 8,

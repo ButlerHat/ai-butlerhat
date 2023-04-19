@@ -15,7 +15,7 @@ from torchvision.transforms import functional as F
 from typing import Optional, Union
 from datasets import load_dataset  # type: ignore
 import sys
-sys.path.append('/workspaces/ia-butlerhat')
+sys.path.append('/workspaces/ai-butlerhat')
 from core.models import AlfredTokenizer
 from src.qact.data_structure import PromptStep
 
@@ -172,7 +172,7 @@ class AlfredExampleToInstruction:
 class HfRobotframeworkDatasetBuilder:
 
     def __init__(self, data_args, tokenizer, num_proc=12):
-        file_dir = "/workspaces/ia-butlerhat/core/datasets"
+        file_dir = "/workspaces/ai-butlerhat/core/datasets"
         cache_dir = os.sep.join(file_dir.split(os.sep)[:-2]) + os.sep + '.hf_cache'
         
         self.ocr_url = "http://nginx_alfred:80/fd/ppocrv3"
@@ -392,16 +392,16 @@ class HfRobotframeworkDatasetBuilder:
 if __name__ == '__main__':
 
     tokenizer = AlfredTokenizer.from_pretrained(
-        "/workspaces/ia-butlerhat/model/hf",
-        cache_dir="/workspaces/ia-butlerhat/.hf_cache/transformers",
+        "/workspaces/ai-butlerhat/model/hf",
+        cache_dir="/workspaces/ai-butlerhat/.hf_cache/transformers",
         use_fast=True
     )
 
     DataArgs = namedtuple('DataArgs', ['dataset_dir', 'max_samples', 'max_seq_length', 'image_size', 'validation_split', 'dataset_valid_dir'])
-    dataset_dir = "/workspaces/ia-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/to_alfred"
+    dataset_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/to_alfred"
     # Valid dataset is to train with all samples to train (validation_split=0) and then use the valid dataset random to evaluate
     # valid_dir = ""  # Uncomment to not use valid dataset
-    valid_dir = "/workspaces/ia-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/validation"
+    valid_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/validation"
     data_args = DataArgs(dataset_dir=dataset_dir, max_samples=-1, max_seq_length=512, image_size=224, validation_split=0, dataset_valid_dir=valid_dir)
     new_dataset = HfRobotframeworkDatasetBuilder(data_args, tokenizer, num_proc=10).build_dataset()
-    new_dataset.save_to_disk("/workspaces/ia-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/ai_finetuned/dataset")
+    new_dataset.save_to_disk("/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/ai_finetuned/dataset")

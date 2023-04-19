@@ -17,7 +17,7 @@ app = flask.Flask(__name__)
 
 @dataclass
 class ModelConfig:
-    model_name_or_path: str = "/workspaces/ia-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/ai_finetuned/model"
+    model_name_or_path: str = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/ai_finetuned/model"
 
 @dataclass
 class FlaskConfig:

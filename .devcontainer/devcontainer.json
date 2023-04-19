@@ -4,7 +4,7 @@
 	"name": "Miniconda (Python 3)",
 	"dockerComposeFile": "./docker-compose.yml",
 	"service": "alfred",
-	"workspaceFolder": "/workspaces/ia-butlerhat",
+	"workspaceFolder": "/workspaces/ai-butlerhat",
 
 	"features": {
 		// "ghcr.io/devcontainers/features/desktop-lite:1": {},
