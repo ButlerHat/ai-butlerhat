@@ -7,7 +7,7 @@
     "do_train": true,
     "do_eval": true,
     "do_predict": false,
-    "model_name_or_path": "/workspaces/ai-butlerhat/finetune_robotframework",
+    "model_name_or_path": "/workspaces/ai-butlerhat/model/finetune_robotframework",
     "model_type": "AlfredUnimodel",
     "output_dir": "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/ai_finetuned/model",
     "gradient_accumulation_steps": 8,
@@ -20,11 +20,11 @@
     "weight_decay": 0.001,
     
     "report_to": "wandb",
-    "max_steps": 100,
-    "save_steps": 110,
+    "max_steps": 120,
+    "save_steps": 130,
     "logging_steps": 2,
     "evaluation_strategy": "steps",
-    "eval_steps": 110,
+    "eval_steps": 130,
     "samples_to_log_per_eval": 4,
     "samples_to_log_per_epoch": 4
 }

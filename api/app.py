@@ -8,8 +8,11 @@ from transformers import HfArgumentParser
 from dataclasses import dataclass
 from core.datasets.robotframework import AlfredExampleToInstruction
 from core.models import AlfredUnimodelForConditionalGeneration, AlfredTokenizer, AlfredPipeline
-from src.qact.data_structure import PromptStep
+from ButlerRobot.src.data_to_ai.data_types import PromptStep
 
+# Print python version
+import sys
+print(sys.version)
 
 app = flask.Flask(__name__)
 # app.config["DEBUG"] = True
@@ -24,6 +27,10 @@ class FlaskConfig:
     host: str = "0.0.0.0"
     port: int = 5000
 
+
+@app.route('/auth', methods=['GET'])
+def auth():
+    return flask.jsonify({"auth": True})
 
 @app.route('/predict', methods=['POST'])
 def predict():

@@ -23,7 +23,7 @@ RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then umask 0002 && /opt/conda/bi
 
 # [Optional] Uncomment to install a different version of Python than the default
 COPY requirements.txt /tmp/pip-tmp/
-RUN conda install -y python=3.8 \
+RUN conda install -y python=3.10 \
     && pip install --no-cache-dir -r /tmp/pip-tmp/requirements.txt 
 RUN conda install ipykernel --update-deps --force-reinstall
 RUN rm -rf /tmp/pip-tmp

@@ -23,7 +23,7 @@ services:
         reservations:
           devices:
           - driver: nvidia
-            device_ids: ['0','1']
+            count: 1
             capabilities: [gpu]
 
     # Overrides default command so things don't shut down after the process ends.
@@ -53,7 +53,7 @@ services:
         reservations:
           devices:
           - driver: nvidia
-            device_ids: ['1']
+            count: 1
             capabilities: [gpu]
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000/health || exit 1"]

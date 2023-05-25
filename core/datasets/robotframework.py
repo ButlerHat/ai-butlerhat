@@ -17,7 +17,7 @@ from datasets import load_dataset  # type: ignore
 import sys
 sys.path.append('/workspaces/ai-butlerhat')
 from core.models import AlfredTokenizer
-from src.qact.data_structure import PromptStep
+from ButlerRobot.src.data_to_ai.data_types import PromptStep
 
 
 def get_visual_bbox(image_size=224):
@@ -398,7 +398,7 @@ if __name__ == '__main__':
     )
 
     DataArgs = namedtuple('DataArgs', ['dataset_dir', 'max_samples', 'max_seq_length', 'image_size', 'validation_split', 'dataset_valid_dir'])
-    dataset_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/to_alfred"
+    dataset_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/to_rpa_dataset"
     # Valid dataset is to train with all samples to train (validation_split=0) and then use the valid dataset random to evaluate
     # valid_dir = ""  # Uncomment to not use valid dataset
     valid_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/validation"
