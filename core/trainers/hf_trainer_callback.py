@@ -63,7 +63,13 @@ class AlfredWandbCallback(WandbCallback):
         # Add input_ids
         def get_prompt(example):
             # Get first [0,0,0,0] items of example['seg_data']
-            first_ocr_idx = example['seg_data'].nonzero()[0][0]
+            try:
+                first_ocr_idx = example['seg_data'].nonzero()[0][0]
+            except IndexError:
+                logger.warning("IndexError in get_prompt for example %s", example, exc_info=True)
+                return {
+                    'wandb_prompt': 'Error getting prompt'
+                }
             prompt = example['input_ids'][:first_ocr_idx]
             prompt = tokenizer.decode(prompt, skip_special_tokens=False)
             prompt = prompt.replace("Web action and object layout prediction. ", '')

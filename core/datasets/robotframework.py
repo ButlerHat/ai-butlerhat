@@ -22,17 +22,18 @@ from ButlerRobot.src.data_to_ai.data_types import PromptStep
 
 def get_visual_bbox(image_size=224):
     image_feature_pool_shape = [image_size//16, image_size//16]
-    visual_bbox_x = (torch.arange(
+    # Disable E1101:no-member
+    visual_bbox_x = (torch.arange(  # pylint: disable=no-member
         0,
         1.0 * (image_feature_pool_shape[1] + 1),
         1.0,
     ) / image_feature_pool_shape[1])
-    visual_bbox_y = (torch.arange(
+    visual_bbox_y = (torch.arange(  # pylint: disable=no-member
         0,
         1.0 * (image_feature_pool_shape[0] + 1),
         1.0,
     ) / image_feature_pool_shape[0])
-    visual_bbox_input = torch.stack(
+    visual_bbox_input = torch.stack(  # pylint: disable=no-member
         [
             visual_bbox_x[:-1].repeat(
                 image_feature_pool_shape[0], 1),
@@ -199,7 +200,7 @@ class HfRobotframeworkDatasetBuilder:
         # Split dataset
         if validation_split > 0:
             assert validation_split < 1, "Validation split must be between 0 and 1"
-            train_dataset = dataset['train'].train_test_split(test_size=0.1, seed=42)
+            train_dataset = dataset['train'].train_test_split(test_size=0.1, seed=44)
             # val_dataset = train_dataset['train'].train_test_split(test_size=0.1, seed=42)
             self.dataset = datasets.DatasetDict({
                 'train': train_dataset['train'],
@@ -398,10 +399,11 @@ if __name__ == '__main__':
     )
 
     DataArgs = namedtuple('DataArgs', ['dataset_dir', 'max_samples', 'max_seq_length', 'image_size', 'validation_split', 'dataset_valid_dir'])
-    dataset_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/to_rpa_dataset"
+    dataset_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/ONCE/data/to_rpa_dataset"
+    output_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/ONCE/data/to_alfred"
     # Valid dataset is to train with all samples to train (validation_split=0) and then use the valid dataset random to evaluate
-    # valid_dir = ""  # Uncomment to not use valid dataset
-    valid_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/validation"
-    data_args = DataArgs(dataset_dir=dataset_dir, max_samples=-1, max_seq_length=512, image_size=224, validation_split=0, dataset_valid_dir=valid_dir)
+    valid_dir = ""  # Uncomment to not use valid dataset
+    # valid_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/validation"
+    data_args = DataArgs(dataset_dir=dataset_dir, max_samples=-1, max_seq_length=512, image_size=224, validation_split=0.1, dataset_valid_dir=valid_dir)
     new_dataset = HfRobotframeworkDatasetBuilder(data_args, tokenizer, num_proc=10).build_dataset()
-    new_dataset.save_to_disk("/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/ai_finetuned/dataset")
+    new_dataset.save_to_disk(output_dir)
