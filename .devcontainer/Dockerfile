@@ -12,6 +12,8 @@ RUN usermod -u $USER_ID -g $GROUP_ID $UNAME
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends poppler-utils ffmpeg libsm6 libxext6
 
+RUN wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && dpkg -i cloudflared-linux-amd64.deb
+
 RUN mkdir -p /tmp/pip-tmp && chown -R $USER_ID:$GROUP_ID /tmp/pip-tmp
 RUN mkdir -p /tmp/conda-tmp && chown -R $USER_ID:$GROUP_ID /tmp/conda-tmp
 

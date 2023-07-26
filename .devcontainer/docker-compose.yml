@@ -12,6 +12,7 @@ services:
     container_name: alfred
     volumes:
       - ..:/workspaces/ai-butlerhat:cached
+      - ${HOME}/.cloudflared:/home/vscode/.cloudflared:cached
     cap_add:
       - SYS_ADMIN
     shm_size: '100gb'
@@ -46,10 +47,10 @@ services:
     command: ["--host", "0.0.0.0"]
     hostname: "ocr.{{.Task.Slot}}"
     deploy:
-      replicas: 2
+      replicas: 1
       resources:
         limits:
-          memory: 10G
+          memory: 6G
         reservations:
           devices:
           - driver: nvidia
