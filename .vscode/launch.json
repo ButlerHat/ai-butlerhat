@@ -127,6 +127,7 @@
             "name": "Debug Api server",
             "type": "python",
             "request": "launch",
+            "python": "/opt/conda/envs/p10/bin/python",
             "program": "/workspaces/ai-butlerhat/api/app.py",
             "console": "integratedTerminal",
             "justMyCode": false,

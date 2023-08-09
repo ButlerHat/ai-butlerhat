@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  ciclo_ai:
+    image: butlerhat/ciclo_ai:latest
+    container_name: ciclo_ai
+    user: vscode
+    init: true
+    volumes:
+      - ${HOST_HOME}/.cloudflared:/home/vscode/.cloudflared:cached
+    # Without net_admin, the container misses some petitions
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    shm_size: '100gb'
+    networks:
+      - external
+    command: bash .devcontainer/prod/postCreateCommand.sh
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+
+networks:
+  external:
+    name: net_robot

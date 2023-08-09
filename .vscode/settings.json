@@ -5,7 +5,8 @@
         "reportPrivateImportUsage": "none"
     },
     "python.analysis.extraPaths": [
-        "/workspaces/BUIBert/robotframework/buibert",
-        "./data-butlerhat/RobotLibraries"
-    ]
+        "/workspaces/ai-butlerhat",
+        "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat"
+    ],
+    "python.envFile": "${workspaceFolder}/.devcontainer/.env"
 }

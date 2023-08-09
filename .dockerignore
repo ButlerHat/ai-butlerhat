@@ -1,5 +1,15 @@
 .DS_Store
 
+# Ignore copy data-butlerhat for production
+filecloud
+# All this directory must be mounted, not copied
+data-butlerhat/
+.git/
+.gitignore
+.gitmodules
+.vscode/
+scripts/  
+
 # RobotFramework
 selenium-screenshot-*
 results/

@@ -1,0 +1,23 @@
+name: base
+
+channels:
+  - defaults
+
+# USE PYTHON 3.10 BECAUSE OF FASTDEPLOY IS NOT SUPPORTED IN 3.11 YET
+dependencies:
+  - python=3.10
+  - pip
+
+  - pip:
+    - git+https://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@github.com/ButlerHat/robotframework-dist-butlerhat.git
+    - Pillow
+    # Install transformers 4.30.2 because 4.31.0 adds self.legacy: bool in Tokenizers. Not sure if our case is 
+    # legacy=True or False, so just use 4.30.2 for now.
+    - transformers==4.30.2
+    - datasets
+    - torchvision
+    - fastdeploy-python  # fastdeploy is not supported in python 3.11 yet
+    - timm
+    - sentencepiece
+    - pydantic-settings
+    - python-multipart

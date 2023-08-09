@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  ciclo_ai:
+    build:
+      context: ../..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+        WANDB_API_KEY: ${WANDB_API_KEY}
+        WANDB_MODEL: ${WANDB_MODEL}
+      target: prod
+    image: butlerhat/ciclo_ai
