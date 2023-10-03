@@ -4,6 +4,7 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
+      target: base
       args:
         USER_ID: ${USER_ID}
         GROUP_ID: ${GROUP_ID}
