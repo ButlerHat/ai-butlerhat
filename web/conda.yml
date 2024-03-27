@@ -1,0 +1,22 @@
+name: web_env
+
+channels:
+  - default
+  - conda-forge
+
+dependencies:
+  - python=3.10
+  - nodejs
+  - pip
+
+  - pip:
+    - streamlit
+    - streamlit-option-menu
+    - streamlit-vis-timeline
+    - tqdm
+    - Pillow
+    - datasets
+    - pandas
+    - robotframework-butlerhat[browser_stealth]
+    - stqdm
+    - openai

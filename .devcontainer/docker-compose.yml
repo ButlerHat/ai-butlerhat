@@ -8,18 +8,22 @@ services:
       args:
         USER_ID: ${USER_ID}
         GROUP_ID: ${GROUP_ID}
+        DOCKERIGNORE: .dockerignore
+        PYPI_USER: ${PYPI_USER}
+        PYPI_PASS: ${PYPI_PASS}
     user: vscode
     network_mode: service:nginx_alfred
     container_name: alfred
     volumes:
       - ..:/workspaces/ai-butlerhat:cached
-      - ${HOME}/.cloudflared:/home/vscode/.cloudflared:cached
+      - ${HOME}/ai-butlerhat-projects:/workspaces/ai-butlerhat/ai-butlerhat-projects:cached
     cap_add:
       - SYS_ADMIN
     shm_size: '100gb'
     ipc: host
     environment:
       - WANDB_API_KEY=${WANDB_API_KEY:-0}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-0}
     deploy:
       resources:
         reservations:
@@ -34,6 +38,7 @@ services:
   nginx_alfred:
     image: nginx:latest
     container_name: nginx_alfred
+    restart: unless-stopped
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     networks:
@@ -47,6 +52,7 @@ services:
     image: davidcorreas/paddle_ocr_gpu
     command: ["--host", "0.0.0.0"]
     hostname: "ocr.{{.Task.Slot}}"
+    restart: unless-stopped
     deploy:
       replicas: 1
       resources:

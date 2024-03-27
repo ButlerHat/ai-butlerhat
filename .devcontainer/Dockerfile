@@ -3,6 +3,8 @@ FROM mcr.microsoft.com/devcontainers/miniconda:0-3 AS base
 ARG UNAME=vscode
 ARG USER_ID=1000
 ARG GROUP_ID=1000
+ARG PYPI_USER
+ARG PYPI_PASS
 
 USER root
 RUN groupmod -g $GROUP_ID $UNAME
@@ -12,13 +14,21 @@ RUN usermod -u $USER_ID -g $GROUP_ID $UNAME
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends poppler-utils ffmpeg libsm6 libxext6
 
-# USE PYTHON 3.10 BECAUSE OF FASTDEPLOY IS NOT SUPPORTED IN 3.11 YET
-COPY conda.yaml* .devcontainer/noop.txt /tmp/conda-tmp/
-# RUN /opt/conda/bin/conda update -n base -c defaults conda
-RUN if [ -f "/tmp/conda-tmp/conda.yaml" ]; then umask 0002 && /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/conda.yaml; fi
-RUN rm -rf /tmp/pip-tmp
-
 USER $UNAME
+WORKDIR /home/$UNAME
+
+ENV PATH=/home/$UNAME/.local/bin:$PATH
+ENV PIP_EXTRA_INDEX_URL=https://$PYPI_USER:$PYPI_PASS@pypiserver.paipaya.com/
+
+# USE PYTHON 3.10 BECAUSE OF FASTDEPLOY IS NOT SUPPORTED IN 3.11 YET
+COPY conda.yaml conda-ai.yaml
+RUN /opt/conda/bin/conda env create -n aibutlerhat -f conda-ai.yaml
+
+# Install web_env conda env
+COPY web/conda.yml conda-web.yaml
+RUN /opt/conda/bin/conda env create -n web_env -f conda-web.yaml
+
+WORKDIR /workspaces/ai-butlerhat
 
 ENV HF_HOME="/workspaces/ai-butlerhat/.hf_cache"
 ENV HF_DATASETS_CACHE="/workspaces/ai-butlerhat/.hf_cache"

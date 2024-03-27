@@ -1,14 +1,15 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/miniconda
 {
-	"name": "Miniconda (Python 3)",
+	"name": "ai-butlerhat (Miniconda)",
 	"dockerComposeFile": "./docker-compose.yml",
 	"service": "alfred",
 	"workspaceFolder": "/workspaces/ai-butlerhat",
 
 	"features": {
 		// "ghcr.io/devcontainers/features/desktop-lite:1": {},
-		"ghcr.io/iterative/features/nvtop:1": {}
+		"ghcr.io/iterative/features/nvtop:1": {},
+		"ghcr.io/devcontainers/features/desktop-lite:1": {}
 	},
 
 	"shutdownAction": "none",
@@ -25,14 +26,20 @@
 					"**/__pycache__": true,
 					"**/.gitkeep": true,
 					"**/*.egg-info": true
-				}
+				},
+				"python.analysis.typeCheckingMode": "basic"
 			},
 
 			"extensions": [
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ms-python.pylint",
-				"github.copilot"
+				"github.copilot",
+				"robocorp.robotframework-lsp",
+				"ms-vscode.live-server",
+				"donjayamanne.githistory",
+				"ryu1kn.partial-diff",
+				"grapecity.gc-excelviewer"
 			]
 		}
 	},
