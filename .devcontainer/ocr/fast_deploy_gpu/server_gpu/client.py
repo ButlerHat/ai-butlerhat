@@ -22,10 +22,10 @@ def print_ocr(example):
     img.save(f"example_{example['instruction_history'][0]['name']}.png")
 
 if __name__ == '__main__':
-    url = "http://nginx_alfred:80/fd/ppocrv3"
+    url = "http://127.0.0.1:8000/fd/ppocrv3"
     headers = {"Content-Type": "application/json"}
 
-    file_path = "/workspaces/ai-butlerhat/.devcontainer/ocr/fast_deploy_gpu/server_gpu/image3.jpeg"
+    file_path = "/workspaces/ai-butlerhat/.devcontainer/ocr/fast_deploy_gpu/examples/telegram.png"
     im = cv2.imread(file_path)
     data = {"data": {"image": cv2_to_base64(im)}, "parameters": {}}
 
@@ -52,9 +52,11 @@ if __name__ == '__main__':
             font = PIL.ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size=12)
             draw.text((bbox[0], bbox[1]), text, font=font, fill='red')
         # Save image
-        img.save(f"example2.png")
+        
+        save_path = "/workspaces/ai-butlerhat/.devcontainer/ocr/fast_deploy_gpu/examples/telegram2.png"
+        img.save(save_path)
 
-        print("Visualized result save in ./example3.png")
+        print(f"Visualized result save in {save_path}")
     else:
         print("Error code:", resp.status_code)
         print(resp.text)

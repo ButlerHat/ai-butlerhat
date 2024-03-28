@@ -30,6 +30,9 @@ wget https://gitee.com/paddlepaddle/PaddleOCR/raw/release/2.6/ppocr/utils/ppocr_
 fastdeploy simple_serving --app server:app
 ```
 
+# Atention
+Don't try to execute OCR with GPU in local because nvidia environment.
+
 Client:
 ```bash
 # Download demo code

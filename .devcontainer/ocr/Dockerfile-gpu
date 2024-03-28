@@ -23,11 +23,11 @@ FROM base AS with_model
 WORKDIR /server
 RUN wget https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_infer.tar && \
     wget https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar && \
-    wget https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_rec_infer.tar && \
+    wget https://paddleocr.bj.bcebos.com/PP-OCRv4/english/en_PP-OCRv4_rec_infer.tar && \
     wget https://bj.bcebos.com/paddlehub/fastdeploy/en_dict.txt && \
     tar -xf en_PP-OCRv3_det_infer.tar && \
     tar -xf ch_ppocr_mobile_v2.0_cls_infer.tar && \
-    tar -xf en_PP-OCRv3_rec_infer.tar && \
+    tar -xf en_PP-OCRv4_rec_infer.tar && \
     rm -rf *.tar
 
 

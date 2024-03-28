@@ -7,8 +7,10 @@ logging.getLogger().setLevel(logging.INFO)
 
 # Configurations
 det_model_dir = 'en_PP-OCRv3_det_infer'
+# det_model_dir = 'ch_PP-OCRv4_det_server_infer'  # Probado, pero peor rendimiento
 cls_model_dir = 'ch_ppocr_mobile_v2.0_cls_infer'
-rec_model_dir = 'en_PP-OCRv3_rec_infer'
+rec_model_dir = 'en_PP-OCRv4_rec_infer'
+# rec_model_dir = 'ch_PP-OCRv4_rec_server_infer'  # Probado, pero peor rendimiento
 rec_label_file = 'en_dict.txt'
 device = 'gpu'
 # backend: ['paddle', 'trt'], you can also use other backends, but need to modify
