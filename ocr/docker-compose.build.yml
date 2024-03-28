@@ -5,4 +5,4 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: davidcorreas/paddle_ocr_gpu:latest
+    image: butlerhat/paddle_ocr_gpu:latest
