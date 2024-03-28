@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.2.0-cudnn8-devel-ubuntu18.04 AS base
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS base
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends wget ffmpeg libsm6 libxext6 curl

@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  paddle_ocr_gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: davidcorreas/paddle_ocr_gpu:latest
