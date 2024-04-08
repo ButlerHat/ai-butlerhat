@@ -18,14 +18,13 @@ class StreamlitLogHandler(logging.Handler):
 
 # Function to load the JSON configuration
 def load_config(path):
-    with open(path, 'r') as file:
+    with open(path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
 # Function to save the modified JSON configuration
 def save_config(path, config):
-    with open(path, 'w') as file:
+    with open(path, 'w', encoding='utf-8') as file:
         json.dump(config, file, indent=4)
-
 
 logger = get_logger(run_robotframework.__name__)
 handler = StreamlitLogHandler(st.code)
@@ -71,6 +70,8 @@ def training():
                 config[key] = st.number_input(f"{key}", value=config[key], format="%d", disabled=disabled)
             elif isinstance(config[key], float):
                 config[key] = st.number_input(f"{key}", value=config[key], format="%f", disabled=disabled)
+            elif isinstance(config[key], list):
+                config[key] = st.multiselect(f"{key}", options=config[key], default=config[key], disabled=disabled)
             else:
                 config[key] = st.text_input(f"{key}", value=str(config[key]), disabled=disabled)
         
@@ -84,5 +85,9 @@ def training():
 
     # Run your task
     st.markdown('# Train the model')
+    if st.button('Train the model'):
+        with st.status("Training..."):
+            run_robotframework.main(config_path)
+        st.success("Training complete!")
 
     # run_robotframework.main()

@@ -18,6 +18,8 @@ dependencies:
     - evaluate
     - nltk
     - pytorch-lightning
+    - absl-py
+    - rouge-score
     # - fastdeploy-python  # fastdeploy is not supported in python 3.11 yet
     - streamlit
     - streamlit-option-menu

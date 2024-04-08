@@ -3,7 +3,7 @@
     "max_seq_length": 1024,
     "image_size": 224,
     "max_seq_length_decoder": 100,
-    "label_names": "['labels']",
+    "label_names": ["labels"],
     "do_train": true,
     "do_eval": true,
     "do_predict": false,

@@ -6,6 +6,21 @@
 
 
     "configurations": [
+        
+        // Run the current file as a script
+        {
+            "name": "Python: Streamlit",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/conda/envs/web_env/bin/streamlit",
+            "console": "integratedTerminal",
+            "cwd": "/workspaces/ai-butlerhat",
+            "args": [
+                "run",
+                "app.py"
+            ],
+            "python": "/opt/conda/envs/web_env/bin/python"
+        },
         {
             "name": "Train DocVQA",
             "type": "python",
