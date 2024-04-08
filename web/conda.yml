@@ -10,6 +10,15 @@ dependencies:
   - pip
 
   - pip:
+    - transformers==4.30.2
+    - torchvision
+    - timm
+    - sentencepiece
+    - wandb
+    - evaluate
+    - nltk
+    - pytorch-lightning
+    # - fastdeploy-python  # fastdeploy is not supported in python 3.11 yet
     - streamlit
     - streamlit-option-menu
     - streamlit-vis-timeline

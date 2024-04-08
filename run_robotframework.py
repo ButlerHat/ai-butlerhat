@@ -169,7 +169,7 @@ class ModelArguments:
     )
 
 
-def main():
+def main(json_config_file: Optional[str] = None):
     # See all possible arguments in layoutlmft/transformers/training_args.py
     # or by passing the --help flag to this script.
     # We now keep distinct sets of args, for a cleaner separation of concerns.
@@ -178,6 +178,8 @@ def main():
         # If we pass only one argument to the script and it's the path to a json file,
         # let's parse it to get our arguments.
         model_args, data_args, training_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
+    elif json_config_file is not None:
+        model_args, data_args, training_args = parser.parse_json_file(json_file=json_config_file)
     else:
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 

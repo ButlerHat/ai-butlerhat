@@ -25,7 +25,7 @@ def upload_page():
 
 def save_file(st_file):
     save = True
-    if os.path.exists(f'{st.secrets.paths.upload}{os.sep}{st_file.name}'):
+    if os.path.exists(f'{st.session_state.upload}{os.sep}{st_file.name}'):
         save = overwrite_file()  # Ensure this function prompts user for overwriting or not
 
     if not save:
@@ -33,7 +33,7 @@ def save_file(st_file):
     
     # Save JSON file
     with st.spinner('Saving data...'):
-        with open(f"{st.secrets.paths.upload}{os.sep}{st_file.name}", 'wb') as f:
+        with open(f"{st.session_state.upload}{os.sep}{st_file.name}", 'wb') as f:
             f.write(st_file.getbuffer())
     
     # Save json

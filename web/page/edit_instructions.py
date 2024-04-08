@@ -386,7 +386,7 @@ def edit_page_action(step: PageAction):
     show_context(step)
 
     st.header('Edit Action')
-    modiffy_page_args(step)
+    return modiffy_page_args(step)
 
 
 def modify_all_tasks():

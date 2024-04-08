@@ -11,6 +11,11 @@ rvl-cdip/
 rvlcdip/
 hf_rvl_cdip/
 
+# Projects
+ai-butlerhat-projects/
+
+# Examples ocr
+examples/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

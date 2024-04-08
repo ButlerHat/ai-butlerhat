@@ -1,9 +1,11 @@
 import os
 import streamlit as st
-from page.upload import upload_page
-from page.sidebar import sidebar_header, sidebar_edit, sidebar_convert
-from page.edit_instructions import edit
-from page.to_rpa_dataset import to_rpa_dataset
+from web.page.upload import upload_page
+from web.page.sidebar import sidebar_header, sidebar_edit, sidebar_convert
+from web.page.edit_instructions import edit
+from web.page.to_rpa_dataset import to_rpa_dataset
+from web.page.pretraining import pretraining
+from web.page.training import training
 
 st.set_page_config(
     page_title="ButlerHat Data",
@@ -17,7 +19,7 @@ st.set_page_config(
     }
 )
 
-# Set color of sidebar #3f4a65
+# Sidebar must be loaded first
 page_task, task_file = sidebar_header()
 
 # Check if the user selected a task
@@ -32,11 +34,16 @@ elif page_task == 'Edit':
         sidebar_edit()
 
 elif page_task == "Convert":
-    dir_path = os.path.join(st.secrets.paths.edited, st.session_state.project) if hasattr(st.session_state, 'project') else st.secrets.paths.edited
     # Check if any file is edited
-    if len(os.listdir(dir_path)) == 0:
+    if len(os.listdir(st.session_state.edited)) == 0:
         st.warning('No files edited yet')
     else:
         to_rpa_dataset()
         sidebar_convert()
+
+elif page_task == "Pretraining":
+    pretraining()
+
+elif page_task == "Training":
+    training()
 

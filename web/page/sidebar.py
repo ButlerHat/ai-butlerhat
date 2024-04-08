@@ -3,7 +3,6 @@ import os
 import json
 import pickle
 from streamlit_option_menu import option_menu
-from ButlerRobot.src.data_types import Task
 
 
 def show_projects():
@@ -12,36 +11,52 @@ def show_projects():
     """
     project = None
     with st.expander('Project', expanded=False):
-        # Check if there is files in the upload_data folder
-        if len(os.listdir(st.secrets.paths.upload)) == 0:
-            st.warning('No files uploaded yet')
-        else:
-            # List all files in the upload_data folder
-            dirs = next(os.walk(st.secrets.paths.upload))[1]
-            dirs.append('-')
-            # Search index of project in dirs
-            if hasattr(st.session_state, 'project'):
-                project = st.session_state.project
-                index = dirs.index(project)
-            else:
-                index = len(dirs)-1
-            project = st.selectbox('Projects:', tuple(dirs), index=index)
-            if not project == '-':
-                st.session_state.project = project
-    
+        if not hasattr(st.session_state, 'project'):
+            st.session_state.project = 'default'
+        
+        st.session_state.project_basedir = os.path.join(st.secrets.paths.base_dir, st.session_state.project)
+        if not os.path.exists(st.session_state.project_basedir):
+            os.makedirs(st.session_state.project_basedir)
+            
+        # Show projects dirs
+        dirs = next(os.walk(st.secrets.paths.base_dir))[1]
+        project = st.session_state.project
+        index = dirs.index(project)
+        project = st.selectbox('Projects:', tuple(dirs), index=index)
+        if project != st.session_state.project:
+            st.session_state.task = None
+            st.session_state.project = project
+            del st.session_state['sidebar_task_file']
+            st.rerun()
+        st.session_state.project = project
+
         # Create new project
         with st.form('new_project_form'):
             new_project = st.text_input('New project name')
             submit = st.form_submit_button('Create project')
             if submit:
-                if new_project:
-                    os.mkdir(st.secrets.paths.upload + os.sep + new_project)
-                    os.mkdir(st.secrets.paths.edited + os.sep + new_project)
-                    os.mkdir(st.secrets.paths.rpa_dataset + os.sep + new_project)
-                    st.session_state.project = new_project
-                    project = new_project
-                else:
+                if not new_project:
                     st.error('Project name is empty')
+                if new_project in dirs:
+                    st.error('Project already exists')
+                st.session_state.project = new_project
+            
+                st.rerun()
+
+        assert st.session_state.project, 'Project name is empty'
+        # Configure directories
+        st.session_state.upload = os.sep.join([st.session_state.project_basedir, st.secrets.paths.upload])
+        st.session_state.edited = os.sep.join([st.session_state.project_basedir, st.secrets.paths.edited])
+        st.session_state.rpa_dataset = os.sep.join([st.session_state.project_basedir, st.secrets.paths.rpa_dataset])
+        st.session_state.pretraining_dataset = os.sep.join([st.session_state.project_basedir, st.secrets.paths.pretraining_dataset])
+        st.session_state.trained = os.sep.join([st.session_state.project_basedir, st.secrets.paths.trained])
+
+        # Create folders if not exist
+        os.makedirs(st.session_state.upload, exist_ok=True)
+        os.makedirs(st.session_state.edited, exist_ok=True)
+        os.makedirs(st.session_state.rpa_dataset, exist_ok=True)
+        os.makedirs(st.session_state.pretraining_dataset, exist_ok=True)
+        os.makedirs(st.session_state.trained, exist_ok=True)
 
         return project
 
@@ -52,15 +67,13 @@ def show_tasks():
     file_edited, file_uploaded = "-", "-"
 
     with st.expander('Task selector', expanded=True):
-        upload_folder = os.path.join(st.secrets.paths.upload, st.session_state.project) if hasattr(st.session_state, 'project') else st.secrets.paths.upload
-        edited_folder = os.path.join(st.secrets.paths.edited, st.session_state.project) if hasattr(st.session_state, 'project') else st.secrets.paths.edited
 
         with st.form('task_form'):
             # List only files in the upload_data folder
-            list_upload = os.listdir(upload_folder)
-            list_upload = [f for f in list_upload if os.path.isfile(os.path.join(upload_folder, f))]
+            list_upload = os.listdir(st.session_state.upload)
+            list_upload = [f for f in list_upload if os.path.isfile(os.path.join(st.session_state.upload, f))]
 
-            if len(list_upload) == 0 and len(os.listdir(edited_folder)) == 0:
+            if len(list_upload) == 0 and len(os.listdir(st.session_state.edited)) == 0:
                 st.warning('No files uploaded yet')
             else:
                 if len(list_upload) != 0:
@@ -69,10 +82,10 @@ def show_tasks():
                     files = list_upload
                     files.append('-')
                     file_uploaded = st.selectbox('Tasks uploaded:', tuple(files), index=len(files)-1)
-                if len(os.listdir(edited_folder)) != 0:
+                if len(os.listdir(st.session_state.edited)) != 0:
                     st.write('Files edited')
                     # List all files in the edited_data folder
-                    files = os.listdir(edited_folder)
+                    files = os.listdir(st.session_state.edited)
                     files.append('-')
                     file_edited = st.selectbox('Tasks edited:', tuple(files), index=len(files)-1)
 
@@ -88,9 +101,9 @@ def show_tasks():
                         del url_params['item_id']
                     st.query_params = {**url_params}
                     if file_uploaded != '-':
-                        task_file = upload_folder + os.sep + file_uploaded
+                        task_file = st.session_state.upload + os.sep + file_uploaded
                     elif file_edited != '-':
-                        task_file = edited_folder + os.sep + file_edited
+                        task_file = st.session_state.edited + os.sep + file_edited
                     else:
                         st.info('No file selected')
         
@@ -98,19 +111,18 @@ def show_tasks():
         return task_file
 
 def show_save():
-    edited_folder = os.path.join(st.secrets.paths.edited, st.session_state.project) if hasattr(st.session_state, 'project') else st.secrets.paths.edited
     # Save task
     save_empty = st.empty()  # Bug: Clears the task selectbox
     save_cont = save_empty.container()
-    save_cont.title(f'Save')
+    save_cont.title('Save')
 
     if hasattr(st.session_state, 'edited_task') and st.session_state.edited_task:
         task = st.session_state.task
         # Modify save name
         save_name = save_cont.text_input('Save name', f"{task.name}-edited.json")
         
-        if save_cont.button(f'Save'):
-            save_path = f'{edited_folder}{os.sep}{save_name}'
+        if save_cont.button('Save'):
+            save_path = f'{st.session_state.edited}{os.sep}{save_name}'
             task.save(save_path)
             save_cont.success('Task saved')
             st.session_state.edited_task = False
@@ -172,7 +184,13 @@ def sidebar_header():
         # Create a dropdown menu
         with st.expander('Navigation', expanded=True):
             
-            options = {"Upload": "cloud-arrow-up", "Edit": "pencil", "Convert": "arrow-right"}
+            options = {
+                "Upload": "cloud-arrow-up", 
+                "Edit": "pencil", 
+                "Convert": "arrow-right",
+                "Pretraining": "boxes",
+                "Training": "gpu-card",
+            }
             default_index = 1
 
             # TODO: Fix url params to not click twice
@@ -195,7 +213,7 @@ def sidebar_header():
 
 
         main_color = st.secrets.theme.primaryColor
-        project = st.session_state.project if hasattr(st.session_state, 'project') else '-'
+        project = st.session_state.project if hasattr(st.session_state, 'project') else 'default'
         st.markdown(f'# Project <span style="color:{main_color}">{project}</span>', unsafe_allow_html=True)
         show_projects()
 
@@ -208,11 +226,9 @@ def sidebar_header():
 def sidebar_edit():
     with st.sidebar:
         show_save()
-        edited_folder = os.path.join(st.secrets.paths.edited, st.session_state.project) if hasattr(st.session_state, 'project') else st.secrets.paths.edited
-        show_download(edited_folder)
+        show_download(st.session_state.edited)
 
 def sidebar_convert():
     with st.sidebar:
-        out_dir_path = os.path.join(st.secrets.paths.rpa_dataset, st.session_state.project) if hasattr(st.session_state, 'project') else st.secrets.paths.rpa_dataset
-        show_download(out_dir_path)
+        show_download(st.session_state.rpa_dataset)
         

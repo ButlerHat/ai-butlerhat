@@ -1,21 +1,21 @@
 import os
 import io
-import base64
-import datasets
-import requests
-import torchvision.transforms as T
-import PIL.Image
 import json
+import base64
+from typing import Optional, Union
+from collections import namedtuple
+import requests
+import torch
+import torchvision.transforms as T
 import fastdeploy as fd
+import PIL.Image
 import PIL.ImageDraw
 import PIL.ImageFont
-import torch
-from collections import namedtuple
+import datasets
 from torchvision.transforms import functional as F
-from typing import Optional, Union
 from datasets import load_dataset  # type: ignore
-import sys
-sys.path.append('/workspaces/ai-butlerhat')
+# import sys
+# sys.path.append('/workspaces/ai-butlerhat')
 from core.models import AlfredTokenizer
 from ButlerRobot.src.data_to_ai.data_types import PromptStep
 
@@ -172,11 +172,18 @@ class AlfredExampleToInstruction:
 
 class HfRobotframeworkDatasetBuilder:
 
-    def __init__(self, data_args, tokenizer, num_proc=12):
+    def __init__(
+            self, 
+            data_args, 
+            tokenizer, 
+            num_proc=12, 
+            ocr_url: str = "http://nginx_alfred:80/fd/ppocrv3",
+            print_func=print
+        ):
         file_dir = "/workspaces/ai-butlerhat/core/datasets"
         cache_dir = os.sep.join(file_dir.split(os.sep)[:-2]) + os.sep + '.hf_cache'
         
-        self.ocr_url = "http://nginx_alfred:80/fd/ppocrv3"
+        self.ocr_url = ocr_url
         self.tokenizer: AlfredTokenizer = tokenizer
         self.max_seq_length = data_args.max_seq_length
         self.image_size = data_args.image_size
@@ -184,6 +191,7 @@ class HfRobotframeworkDatasetBuilder:
         dataset_valid_dir = data_args.dataset_valid_dir
         validation_split = data_args.validation_split
         self.num_proc = num_proc
+        self.print_func = print_func
         
         # Load dataset
         dataset: datasets.DatasetDict = load_dataset("json", data_dir=dataset_dir, cache_dir=cache_dir) # type: ignore
@@ -219,22 +227,22 @@ class HfRobotframeworkDatasetBuilder:
             self.dataset['validation'] = dataset_valid['train']
 
         # Print size of dataset
-        print(f"Train size: {len(self.dataset['train'])}")
-        print(f"Validation size: {len(self.dataset['validation'])}")
+        self.print_func(f"Train size: {len(self.dataset['train'])}")
+        self.print_func(f"Validation size: {len(self.dataset['validation'])}")
         # print(f"Test size: {len(self.dataset['test'])}")
 
     def build_dataset(self):
-        print("Building dataset")
+        self.print_func("Building dataset")
         dataset = self.dataset
 
-        print("Convert images...")
+        self.print_func("Convert images...")
         # Convert str
         img_convert = lambda example: {
             "image": PIL.Image.open(io.BytesIO(base64.b64decode(example['screenshot']))).convert('RGB')
         }
         dataset = dataset.map(img_convert, num_proc=self.num_proc, remove_columns=['screenshot'])
 
-        print("Processing OCR...")
+        self.print_func("Processing OCR...")
         def read_image(example):
             result = process_ocr(self.ocr_url, example['image'], self.tokenizer)
             if result is None:
@@ -267,21 +275,21 @@ class HfRobotframeworkDatasetBuilder:
         #     img.save(f"example_{example['instruction_history'][0]['name']}.png")
         # data_to_print.map(print_ocr)
 
-        print("Filtering out None images and labels...")
-        print(f'Number of examples before: {len(dataset["train"])}')
+        self.print_func("Filtering out None images and labels...")
+        self.print_func(f'Number of examples before: {len(dataset["train"])}')
         filter_nones = lambda example: all(example[key] is not None for key in ['image', 'text_list', 'bbox_list', 'page_size'])
         dataset = dataset.filter(filter_nones)
-        print(f'Number of examples after: {len(dataset["train"])}')
+        self.print_func(f'Number of examples after: {len(dataset["train"])}')
         print(dataset['train'][0].keys())
         
-        print("Processing images...")
+        self.print_func("Processing images...")
         process_image = lambda example: {
             "image": img_trans_torchvision(example['image'], self.image_size)
         }
         dataset = dataset.map(process_image, num_proc=self.num_proc)
         print(dataset['train'][0].keys())
 
-        print("Normalizing bounding boxes...")
+        self.print_func("Normalizing bounding boxes...")
         def normalize_bboxes(example):
             new_bboxes = []
             width, height = example['page_size']
@@ -294,19 +302,19 @@ class HfRobotframeworkDatasetBuilder:
         dataset = dataset.map(normalize_bboxes)
         print(dataset['train'][0].keys())
         
-        print("Adding visual bounding boxes...")
+        self.print_func("Adding visual bounding boxes...")
         add_visual_bboxes = lambda _: {"visual_seg_data": get_visual_bbox(self.image_size)}
         dataset = dataset.map(add_visual_bboxes)
         print(dataset['train'][0].keys())
         
-        print("Convert tokens to ids...")
+        self.print_func("Convert tokens to ids...")
         tokens_to_ids = lambda example: {
                 "token_list": self.tokenizer.convert_tokens_to_ids(example['text_list']),
             }
         dataset = dataset.map(tokens_to_ids)
         print(dataset['train'][0].keys())
         
-        print("Making prompt...")
+        self.print_func("Making prompt...")
         def make_prompt(example):
             # Instruction history is the input, step=PageAction is the label. Could be task or action.
             prompt_text = "Web action and object layout prediction."
@@ -332,7 +340,7 @@ class HfRobotframeworkDatasetBuilder:
             }
         dataset = dataset.map(make_prompt)
 
-        print("Convert to seq2seq...")
+        self.print_func("Convert to seq2seq...")
         def convert_seq_to_seq(example):
             # Encoder
             prompt = example['prompt'] + " " + example['instruction']
@@ -360,7 +368,7 @@ class HfRobotframeworkDatasetBuilder:
         add_char_seg_data = lambda _: {"char_seg_data": [[0,0,0,0]]}
         dataset = dataset.map(add_char_seg_data, num_proc=self.num_proc)
 
-        print("Shaping data...")
+        self.print_func("Shaping data...")
         def shape_data(example):
             return {
                 "input_ids": example['input_ids'],
@@ -377,15 +385,15 @@ class HfRobotframeworkDatasetBuilder:
         dataset.set_format(type='torch')
         print(dataset['train'][0].keys())
 
-        print("Final check...")
-        print(f'Number of examples before: {len(dataset["train"])}')
+        self.print_func("Final check...")
+        self.print_func(f'Number of examples before: {len(dataset["train"])}')
         final_check = lambda example: all([
             len(example['input_ids']) == len(example['seg_data']),
             len(example['seg_data'].size()) == 2,
             len(example['char_seg_data'].size()) == 2
         ])
         dataset.filter(final_check)
-        print(f'Number of examples after: {len(dataset["train"])}')
+        self.print_func(f'Number of examples after: {len(dataset["train"])}')
 
         return dataset
 
