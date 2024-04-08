@@ -6,6 +6,7 @@ from web.page.edit_instructions import edit
 from web.page.to_rpa_dataset import to_rpa_dataset
 from web.page.pretraining import pretraining
 from web.page.training import training
+from web.page.test_model import test_model
 
 st.set_page_config(
     page_title="ButlerHat Data",
@@ -23,6 +24,21 @@ st.set_page_config(
 page_task, task_file = sidebar_header()
 
 # Check if the user selected a task
+if page_task == "Test":
+    test_model()
+else:
+    # Stop servers if exists
+    if 'server_thread' in st.session_state:
+        with st.spinner('Stopping AI Model server...'):
+            st.session_state.server_thread.terminate()
+            st.session_state.server_thread.join()
+            del st.session_state['server_thread']
+    if 'interpreter_id' in st.session_state:
+        with st.spinner('Stopping interpreter server...'):
+            st.session_state.interpreter_manager.stop_interpreter(st.session_state.interpreter_id)
+            del st.session_state['interpreter_id']
+            del st.session_state['interpreter_manager']
+
 if page_task == 'Upload':
     upload_page()
 

@@ -10,7 +10,7 @@ dependencies:
   - pip
 
   - pip:
-    - transformers==4.30.2
+    - transformers[torch]==4.30.2
     - torchvision
     - timm
     - sentencepiece
@@ -28,6 +28,12 @@ dependencies:
     - Pillow
     - datasets
     - pandas
+    - robotframework==6.1.1
     - robotframework-butlerhat[browser_stealth]
     - stqdm
     - openai
+    # Interpreter
+    - git+https://github.com/robocorp/robotframework-lsp.git@release-robotframework-lsp#subdirectory=robotframework-interactive/src
+    - git+https://github.com/robocorp/robotframework-lsp.git@release-robotframework-lsp#subdirectory=robocorp-python-ls-core/src
+    - pydantic-settings
+    - python-multipart

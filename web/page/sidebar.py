@@ -50,6 +50,7 @@ def show_projects():
         st.session_state.rpa_dataset = os.sep.join([st.session_state.project_basedir, st.secrets.paths.rpa_dataset])
         st.session_state.pretraining_dataset = os.sep.join([st.session_state.project_basedir, st.secrets.paths.pretraining_dataset])
         st.session_state.trained = os.sep.join([st.session_state.project_basedir, st.secrets.paths.trained])
+        st.session_state.tested = os.sep.join([st.session_state.project_basedir, st.secrets.paths.tested])
 
         # Create folders if not exist
         os.makedirs(st.session_state.upload, exist_ok=True)
@@ -57,6 +58,7 @@ def show_projects():
         os.makedirs(st.session_state.rpa_dataset, exist_ok=True)
         os.makedirs(st.session_state.pretraining_dataset, exist_ok=True)
         os.makedirs(st.session_state.trained, exist_ok=True)
+        os.makedirs(st.session_state.tested, exist_ok=True)
 
         return project
 
@@ -190,6 +192,7 @@ def sidebar_header():
                 "Convert": "arrow-right",
                 "Pretraining": "boxes",
                 "Training": "gpu-card",
+                "Test": "chat-dots"
             }
             default_index = 1
 

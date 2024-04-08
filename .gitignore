@@ -10,6 +10,9 @@ model/
 rvl-cdip/
 rvlcdip/
 hf_rvl_cdip/
+browser/
+interactive_console_output.xml
+playwright-log.txt
 
 # Projects
 ai-butlerhat-projects/

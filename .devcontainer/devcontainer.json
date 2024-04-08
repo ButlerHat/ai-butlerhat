@@ -45,7 +45,7 @@
 	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "conda init bash"
+	"postCreateCommand": "conda init bash && /opt/conda/envs/web_env/bin/python -m Browser.entry init"
 
 	// Configure tool-specific properties.
 	// "customizations": {},

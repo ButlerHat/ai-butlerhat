@@ -6,6 +6,7 @@ import base64
 import dataclasses
 import logging
 import streamlit as st
+from datetime import datetime, timedelta
 from typing import Optional
 from io import BytesIO
 from PIL import Image, ImageDraw
@@ -245,6 +246,13 @@ def shape_task_to_timeline(task: Task) -> tuple[list, list]:
     # Add groups
     tasks_groups = [{"id": i, "content": f"Task ({i - (step_to_item.max_depth - 3)})", "style": task_style} for i in range(3, step_to_item.max_depth)]
     groups.extend(tasks_groups)
+
+    # If the item start and end are the same, add a second to the end
+    for item in items:
+        if item['start'] == item['end']:
+            dt = datetime.strptime(item['end'], '%Y-%m-%dT%H:%M:%S')
+            dt += timedelta(seconds=1)
+            item['end'] = dt.strftime('%Y-%m-%dT%H:%M:%S')
 
     return items, groups
 
