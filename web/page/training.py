@@ -1,6 +1,7 @@
 import os
 import logging
 import json
+from datasets import load_from_disk
 import streamlit as st
 from streamlit.logger import get_logger
 import run_robotframework
@@ -32,6 +33,20 @@ logger.addHandler(handler)
 
 
 def training():
+
+    st.markdown('# Training')
+
+    if os.listdir(st.session_state.pretraining_dataset):
+        # Load dataset
+        dataset = load_from_disk(st.session_state.pretraining_dataset)
+        st.markdown('## Current dataset info')
+        st.markdown(f'- Train split: {len(dataset["train"])}')
+        st.markdown(f'- Validation split: {len(dataset["validation"])}')
+    else:
+        st.warning('No dataset found')
+        st.stop()
+
+    st.info('max_steps refers to optimization steps. To calculate num of epochs, use: max_steps = (examples_training_dataset / gradient_accumulation_steps) * num_epochs')
 
     # Get the path to the configuration file
     config_path = None

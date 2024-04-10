@@ -36,7 +36,8 @@ WORKDIR /workspaces/ai-butlerhat
 
 ENV HF_HOME="/workspaces/ai-butlerhat/.hf_cache"
 ENV HF_DATASETS_CACHE="/workspaces/ai-butlerhat/.hf_cache"
-
+# For robot language server
+ENV PATH=/opt/conda/envs/web_env/bin:$PATH
 
 FROM base AS prod 
 

@@ -9,7 +9,7 @@ from web.page.training import training
 from web.page.test_model import test_model
 
 st.set_page_config(
-    page_title="ButlerHat Data",
+    page_title="NPC Agent Data",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="expanded",

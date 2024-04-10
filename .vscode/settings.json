@@ -9,5 +9,8 @@
         "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat",
         "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/interpreter-butlerhat/src"
     ],
-    "python.envFile": "${workspaceFolder}/.devcontainer/.env"
+    "python.envFile": "${workspaceFolder}/.devcontainer/.env",
+    "robot.python.executable": "/opt/conda/envs/web_env/bin/python",
+    "robot.language-server.python": "/opt/conda/envs/web_env/bin/python",
+    
 }

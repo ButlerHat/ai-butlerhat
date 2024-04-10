@@ -407,11 +407,11 @@ if __name__ == '__main__':
     )
 
     DataArgs = namedtuple('DataArgs', ['dataset_dir', 'max_samples', 'max_seq_length', 'image_size', 'validation_split', 'dataset_valid_dir'])
-    dataset_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/ONCE/data/to_rpa_dataset"
-    output_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/ONCE/data/to_alfred"
+    dataset_dir = "/workspaces/ai-butlerhat/ai-butlerhat-projects/default/rpa_dataset"
+    output_dir = "/workspaces/ai-butlerhat/ai-butlerhat-projects/default/pretraining_dataset"
     # Valid dataset is to train with all samples to train (validation_split=0) and then use the valid dataset random to evaluate
     valid_dir = ""  # Uncomment to not use valid dataset
     # valid_dir = "/workspaces/ai-butlerhat/data-butlerhat/robotframework-butlerhat/TestSuites/CicloZero/data/validation"
     data_args = DataArgs(dataset_dir=dataset_dir, max_samples=-1, max_seq_length=512, image_size=224, validation_split=0.1, dataset_valid_dir=valid_dir)
-    new_dataset = HfRobotframeworkDatasetBuilder(data_args, tokenizer, num_proc=10).build_dataset()
+    new_dataset = HfRobotframeworkDatasetBuilder(data_args, tokenizer, num_proc=20).build_dataset()  # Implementing this function in streamlit with num_proc>1 fails, I think is a bug of not running in main
     new_dataset.save_to_disk(output_dir)

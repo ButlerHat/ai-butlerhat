@@ -27,6 +27,28 @@ def test_model():
     if not os.listdir(st.session_state.trained):
         st.warning('No model trained')
         st.stop()
+
+    # List directories in trained that start with checkpoint
+    st.session_state.checkpoint = st.session_state.trained
+    stop_server = False
+    checkpoints = [d for d in os.listdir(st.session_state.trained) if d.startswith("checkpoint")]
+    if checkpoints:
+        # Select checkpoint
+        with st.form("Select the checkpoint to test"):
+            st.write("Select the checkpoint to test")
+            checkpoint = st.selectbox("Checkpoints", ["latest"] + checkpoints)
+            if st.form_submit_button("Submit") and checkpoint and checkpoint != "latest":
+                st.session_state.checkpoint = os.sep.join([st.session_state.trained, checkpoint])
+                if 'server_thread' in st.session_state:
+                    stop_server = True
+
+    if stop_server:
+        with st.spinner('Stopping AI Model server...'):
+            st.session_state.server_thread.terminate()
+            st.session_state.server_thread.join()
+            del st.session_state['server_thread']
+            st.success('Server stopped')
+
     
     if 'testing_url' not in st.session_state:
         with st.form("Input the url of the page to test"):
@@ -43,7 +65,7 @@ def test_model():
         with st.status('Loading the Model and API...'):
             # Change model path
             st.write("Loading API.")
-            api.settings['name_or_path'] = st.session_state.trained
+            api.settings['name_or_path'] = st.session_state.checkpoint
             
             # Run the app with uvicorn (ASGI server)
             server_thread = multiprocessing.Process(target=run_ai_server)

@@ -1,5 +1,6 @@
 import os
 from collections import namedtuple
+from datasets import load_from_disk
 import streamlit as st
 from core.models import AlfredTokenizer
 from core.datasets.robotframework import HfRobotframeworkDatasetBuilder
@@ -41,7 +42,7 @@ def pretraining():
         dataset_builder = HfRobotframeworkDatasetBuilder(
             data_args,
             tokenizer,
-            num_proc=10,
+            num_proc=1,  # This is an error that only happens in streamlit. If you run the main in core/datasets/robotframework.py it works with num_proc>1
             ocr_url=st.secrets.urls.ocr,
             print_func=st.write
         )
@@ -49,3 +50,13 @@ def pretraining():
         with st.status("Converting data..."):
             new_dataset = dataset_builder.build_dataset()
             new_dataset.save_to_disk(st.session_state.pretraining_dataset)
+
+    # Show dataset num examples if st.pretraining_dataset is not empty
+    if os.listdir(st.session_state.pretraining_dataset):
+        # Load dataset
+        dataset = load_from_disk(st.session_state.pretraining_dataset)
+        st.markdown('## Processed dataset info')
+        st.markdown(f'- Train split: {len(dataset["train"])}')
+        st.markdown(f'- Validation split: {len(dataset["validation"])}')
+
+        

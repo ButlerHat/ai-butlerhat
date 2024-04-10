@@ -13,6 +13,10 @@ hf_rvl_cdip/
 browser/
 interactive_console_output.xml
 playwright-log.txt
+log.html
+output.xml
+report.html
+tmp_screenshots/
 
 # Projects
 ai-butlerhat-projects/

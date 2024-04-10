@@ -185,7 +185,6 @@ def sidebar_header():
         st.image(st.secrets.paths.logo)
         # Create a dropdown menu
         with st.expander('Navigation', expanded=True):
-            
             options = {
                 "Upload": "cloud-arrow-up", 
                 "Edit": "pencil", 
@@ -195,23 +194,15 @@ def sidebar_header():
                 "Test": "chat-dots"
             }
             default_index = 1
-
-            # TODO: Fix url params to not click twice
-            # params = st.query_params
-            # if 'page' in params:
-            #     selected_url: str = params['page'][0]
-            #     if selected_url in options.keys():
-            #         default_index = list(options.keys()).index(selected_url)
-            
-            # Store selection in url
-            # params['page'] = page_task
-            # st.query_params = {**params}
             
             page_task = option_menu(
                 menu_title=None,
                 options=list(options.keys()),
                 icons=list(options.values()),
-                default_index=default_index
+                default_index=default_index,
+                styles={
+                    "nav-link-selected": {"color": "black"}
+                }
             )
 
 
